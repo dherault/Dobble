@@ -1,0 +1,19 @@
+{
+  "name": "dobble",
+  "version": "1.0.0",
+  "description": "An algorithm",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherault/Dobble.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dherault/Dobble/issues"
+  },
+  "homepage": "https://github.com/dherault/Dobble#readme"
+}
