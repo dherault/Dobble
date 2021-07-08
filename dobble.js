@@ -96,7 +96,7 @@ function countGlyphs(combinaisons) {
 }
 
 if (require.main === module) {
-  const result = dobble(4, 13)
+  const result = dobble(6, 24)
 
   console.log('result', result)
   console.log('glyphs used:', countGlyphs(result))

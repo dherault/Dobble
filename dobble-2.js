@@ -1,23 +1,47 @@
 /*
-Pour 4, 13:
-  [ '0', '1', '2', '3' ],
-  [ '0', '4', '5', '6' ],
-  [ '0', '7', '8', '9' ],
-  [ '0', 'a', 'b', 'c' ],
-  [ '1', '4', '7', 'a' ],
-  [ '1', '5', '8', 'b' ],
-  [ '1', '6', '9', 'c' ],
-  [ '2', '4', '8', 'c' ],
-  [ '2', '5', '9', 'a' ],
-  [ '2', '6', '7', 'b' ],
-  [ '3', '4', '9', 'b' ],
-  [ '3', '5', '7', 'c' ],
-  [ '3', '6', '8', 'a' ],
+Pour 4:
+  [  0  1  2  3  ],
+  [  0  4  5  6  ],
+  [  0  7  8  9  ],
+  [  0  a  b  c  ],
+  [  1  4  7  a  ],
+  [  1  5  8  b  ],
+  [  1  6  9  c  ],
+  [  2  4  8  c  ],
+  [  2  5  9  a  ],
+  [  2  6  7  b  ],
+  [  3  4  9  b  ],
+  [  3  5  7  c  ],
+  [  3  6  8  a  ],
+
+Pour 6
+  [  0  1  2  3  4  5  ],
+  [  0  6  7  8  9  a  ],
+  [  0  b  c  d  e  f  ],
+  [  0  g  h  i  j  k  ],
+  [  0  l  m  n  o  p  ],
+  [  0  q  r  s  t  u  ],
+  [  1  6  b  g  l  q  ],
+  [  1  7  c  h  m  r  ],
+  [  1  8  d  i  n  s  ],
+  [  1  9  e  j  o  t  ],
+  [  1  a  f  k  p  u  ],
+  [  2  6  c  i  o  u  ],
+  [  2  7  d  j  p  q  ],
+  [  2  8  e  k  l  r  ],
+  [  2  9  f  g  m  s  ],
+  [  2  a  b  h  n  t  ],
+  [  3  a  e  i  m  q  ],
+  [  3  6  f  j  n  r  ],
+  [  3  7  b  k  o  s  ],
+  [  3  8  c  g  p  t  ],
+  [  3  9  d  h  l  u  ],
 
 On remarque une harmonie dans les nombres
 */
 
 const assert = require('assert')
+// const allGlyphs = '0123456789abcdefghijklmnopqrstuvwxyzQWERTYUIOPLKJHGFDSAZXCVBNMαβγδεζηθικλμνξοπρστυφχψω!@#$%^&*()_+[]{}:;|"?>.<,`~'.split('')
 
 const allGlyphs = [
   '爱北话买钱热分听叫商能杯米飞菜本语坐期吃不后没朋做医很看你岁怎出脑狗见对东上少中的面多五椅雨开好她店钟字亮前苹女衣太个现小昨起八喝六果桌哪觉回西猫妈喂大读校天子写们汉喜视些十在系那姐影老有候电月年九服二明下七国气打院点先说什京块习欢关友么想同来高冷兴机人租书水星家三是请今认我睡时吗午茶爸生一漂去他儿车里了样名号住谢呢都几会这谁识学四再工客师饭和作',
@@ -30,15 +54,25 @@ const allGlyphs = [
 .map(string => string.split(''))
 .flat()
 
-function dobble(n, m) {
+function dobble(n) {
   const combinaisons = []
   const initialCombinaisons = []
 
   createInitialCombinaisons()
 
+  initialCombinaisons.shift()
+
   vertical(1)
-  topLeftBottomRightDiagonal(2)
-  topRightBottomLeftDiagonal(3)
+
+  // topLeftBottomRightDiagonal(0, 2)
+  // topRightBottomLeftDiagonal(0, 3)
+
+  for (let k = 0; k <= n / 2 - 2; k++) {
+    // console.log('k, k + 2', k, 2 * (k + 1))
+    // console.log('k, k + 2', k, 2 * (k + 1) + 1)
+    topLeftBottomRightDiagonal(k, 2 * (k + 1))
+    topRightBottomLeftDiagonal(k, 2 * (k + 1) + 1)
+  }
 
   function createInitialCombinaisons() {
     let combinaison = [allGlyphs[0]]
@@ -48,76 +82,78 @@ function dobble(n, m) {
 
       if (combinaison.length === n) {
         combinaisons.push(combinaison.slice())
-        initialCombinaisons.push(combinaison.slice())
+
+        const initialCombinaison = combinaison.slice()
+
+        initialCombinaison.shift()
+
+        initialCombinaisons.push(initialCombinaison)
 
         combinaison = [allGlyphs[0]]
       }
-
     }
   }
 
   function vertical(x) {
-    let combinaison = [allGlyphs[x]]
+    for (let j = 0; j < n - 1; j++) {
+      const combinaison = [allGlyphs[x]]
 
-    for (let j = 1; j < n; j++) {
-      for (let i = 1; i < n; i++) {
-
+      for (let i = 0; i < n - 1; i++) {
         combinaison.push(initialCombinaisons[i][j])
       }
 
-      combinaisons.push(combinaison.slice())
-
-      combinaison = [allGlyphs[x]]
+      combinaisons.push(combinaison)
     }
   }
 
-  function topLeftBottomRightDiagonal(x) {
-    let combinaison = [allGlyphs[x]]
+  function topLeftBottomRightDiagonal(o, x) {
+    for (let j = 0; j < n - 1; j++) {
+      const combinaison = [allGlyphs[x]]
 
-    for (let j = 1; j < n; j++) {
-      for (let i = 1; i < n; i++) {
-        const x = i + j - 1 < n ? i + j - 1 : (i + j - 1) % n + 1
+      for (let i = 0; i < n  - 1; i++) {
+        const x = i * (o + 1) + j < n - 1 ? i * (o + 1) + j : (i * (o + 1) + j) % (n - 1)
+
+        // if (!initialCombinaisons[i][x]) console.log('x', x)
+        combinaison.push(initialCombinaisons[i][x])
+      }
+
+      combinaisons.push(combinaison)
+    }
+  }
+
+  function topRightBottomLeftDiagonal(o, x) {
+    for (let j = 0; j < n - 1; j++) {
+      const combinaison = [allGlyphs[x]]
+
+      for (let i = 0; i < n - 1; i++) {
+        let x = (n - i * (o + 1) + j - 1 < n - 1 ? n - i * (o + 1) + j - 1 : (n - i * (o + 1) + j - 1)) % (n - 1)
+
+        // if (typeof initialCombinaisons[i][x] === 'undefined') console.log('x', x)
+        if (x < 0) x += n - 1
+
 
         combinaison.push(initialCombinaisons[i][x])
       }
 
-      combinaisons.push(combinaison.slice())
-
-      combinaison = [allGlyphs[x]]
-    }
-  }
-
-  function topRightBottomLeftDiagonal(x) {
-    let combinaison = [allGlyphs[x]]
-
-    for (let j = 1; j < n; j++) {
-      for (let i = 1; i < n; i++) {
-        const x = n - i + j - 1 < n ? n - i + j - 1 : (n - i + j - 1) % n + 1
-
-        combinaison.push(initialCombinaisons[i][x])
-      }
-
-      combinaisons.push(combinaison.slice())
-
-      combinaison = [allGlyphs[x]]
+      combinaisons.push(combinaison)
     }
   }
 
   return combinaisons
 }
 
-function isDobble(combinaisons) {
+function check(combinaisons) {
   for (let i = 0; i < combinaisons.length; i++) {
+    if (combinaisons[i].some(glyph => typeof glyph === 'undefined')) return 1
+
     for (let j = i + 1; j < combinaisons.length; j++) {
       if (countLinks(combinaisons[i], combinaisons[j]) !== 1) {
-        console.log(combinaisons[i], combinaisons[j])
-
-        return false
+        return 2
       }
     }
   }
 
-  return true
+  return 0
 }
 
 function countLinks(a, b) {
@@ -147,13 +183,46 @@ function countGlyphs(combinaisons) {
 if (require.main === module) {
   console.log('allGlyphs.length', allGlyphs.length)
 
-  for (let i = 4; i < 52; i += 2) {
-    const result = dobble(i)
+  const n = parseInt(process.argv[2])
 
-    assert(isDobble(result), `${i} is faulty`)
+  if (n) {
+    console.log(`dobble(${n})`)
 
-    console.log(i, 'set size:', result.length, 'glyphs used:', countGlyphs(result))
+    const result = dobble(n)
+
+    result.forEach(x => console.log(x.join(' ')))
+
+    console.log(n, 'set size:', result.length, 'glyphs used:', countGlyphs(result))
+
+    assert(check(result) === 0)
+
+
   }
+  else {
+    let i = 4;
+    let checked
+
+    while (true) {
+      const result = dobble(i)
+
+      checked = check(result)
+
+      try {
+        assert(checked === 0)
+
+        // console.log('result', result)
+        console.log(i, 'set size:', result.length, 'glyphs used:', countGlyphs(result))
+      }
+      catch (error) {
+        console.log(i, 'is faulty', checked)
+
+        if (checked === 1) break
+      }
+
+      i += 2
+    }
+  }
+
 
 }
 
