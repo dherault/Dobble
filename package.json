@@ -4,7 +4,9 @@
   "description": "An algorithm",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node dobble.js",
+    "start:watch": "node dobble-stochastic.js",
+    "dev": "node dobble-comparison.js"
   },
   "repository": {
     "type": "git",
