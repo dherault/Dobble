@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dobble.js",
     "start:watch": "node dobble-stochastic.js",
+    "build": "node dobble-2.js",
     "dev": "node dobble-comparison.js"
   },
   "repository": {
